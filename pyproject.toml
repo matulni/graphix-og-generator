@@ -1,0 +1,25 @@
+[project]
+name = "graphix-og-generator"
+authors = [{ name = "Mateo Uldemolins", email = "mateo.uldemolins-nivela@inria.fr" }]
+version = "0.1"
+dependencies = [
+  "graphix @ git+https://github.com/TeamGraphix/graphix.git@master"
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+# Keep in sync with pyright
+files = ["*.py", "graphix_qasm_parser"]
+ignore_missing_imports = true
+follow_untyped_imports = true
+strict = true

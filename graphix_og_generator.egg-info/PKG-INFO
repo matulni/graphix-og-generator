@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: graphix-og-generator
+Version: 0.1
+Author-email: Mateo Uldemolins <mateo.uldemolins-nivela@inria.fr>
+Requires-Dist: graphix@ git+https://github.com/TeamGraphix/graphix.git@master
