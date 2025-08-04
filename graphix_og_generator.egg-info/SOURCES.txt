@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-graphix_og_generator/graphix_og_generator.py
-graphix_og_generator.egg-info/PKG-INFO
-graphix_og_generator.egg-info/SOURCES.txt
-graphix_og_generator.egg-info/dependency_links.txt
-graphix_og_generator.egg-info/requires.txt
-graphix_og_generator.egg-info/top_level.txt
-tests/test_og_generator.py
