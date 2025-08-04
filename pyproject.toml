@@ -3,7 +3,7 @@ name = "graphix-og-generator"
 authors = [{ name = "Mateo Uldemolins", email = "mateo.uldemolins-nivela@inria.fr" }]
 version = "0.1"
 dependencies = [
-  "graphix @ git+https://github.com/TeamGraphix/graphix.git@master"
+  "graphix @ git+https://github.com/matulni/graphix@master"
 ]
 
 [tool.pytest.ini_options]
