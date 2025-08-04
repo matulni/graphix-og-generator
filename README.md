@@ -5,7 +5,7 @@
 
 ## Installation
 
-
-
-## Usage
+```bash
+pip install https://github.com/matulni/graphix-og-generator.git@main
+```
 

@@ -84,16 +84,8 @@ class BlockComposer:
                 merged_nodes_max = min_io
 
             # NOTE: In future versions `inputs` and `outputs` of `OpenGraph` will be (unordered) sets which don't support indexing.
-            ins = (
-                og2.inputs[:merged_nodes_max]
-                if not rnd
-                else random.choices(og2.inputs, k=merged_nodes_max)
-            )
-            outs = (
-                og1.outputs[:merged_nodes_max]
-                if not rnd
-                else random.choices(og1.outputs, k=merged_nodes_max)
-            )
+            ins = og2.inputs[:merged_nodes_max] if not rnd else random.choices(og2.inputs, k=merged_nodes_max)
+            outs = og1.outputs[:merged_nodes_max] if not rnd else random.choices(og1.outputs, k=merged_nodes_max)
 
             return dict(zip(ins, outs))
 
@@ -111,11 +103,7 @@ class BlockComposer:
         if ni_max_vals:
             for og, ni_max in zip(og_lst, ni_max_vals):
                 ni_remove = max(0, len(og.inputs) - ni_max)
-                ins = (
-                    og.inputs[ni_remove:]
-                    if not rnd
-                    else random.choices(og.inputs, k=ni_remove)
-                )
+                ins = og.inputs[ni_remove:] if not rnd else random.choices(og.inputs, k=ni_remove)
                 for i in ins:
                     og.inputs.remove(i)
 
@@ -197,10 +185,7 @@ def get_grid_composition(og: OpenGraph, n_rows: int, n_layers: int) -> OpenGraph
 
         for n in range(1, n_rows):
             shift = og0.inside.order()
-            mapping = {
-                node: i
-                for i, node in enumerate(og_aux.inputs + og_aux.outputs, start=shift)
-            }
+            mapping = {node: i for i, node in enumerate(og_aux.inputs + og_aux.outputs, start=shift)}
             og0, _ = og0.compose(og_aux, mapping)
 
             if (

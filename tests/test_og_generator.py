@@ -83,9 +83,7 @@ def get_og_2() -> OpenGraph:
         | |
     [1]-3-5-(7)
     """
-    graph: nx.Graph[int] = nx.Graph(
-        [(0, 2), (1, 3), (2, 3), (2, 4), (3, 5), (4, 5), (4, 6), (5, 7)]
-    )
+    graph: nx.Graph[int] = nx.Graph([(0, 2), (1, 3), (2, 3), (2, 4), (3, 5), (4, 5), (4, 6), (5, 7)])
     inputs = [0, 1]
     outputs = [6, 7]
     meas = {
@@ -124,9 +122,7 @@ class TestOGG:
         n_blocks = [1, 3, 5]
         nodes_ref = [19, 35, 51]
 
-        og_lst, nodes_lst = self.ogg.generate_og(
-            n_blocks, merged_nodes_max=1, ni_max_vals=[1, 1, 1]
-        )
+        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, merged_nodes_max=1, ni_max_vals=[1, 1, 1])
         for og, n, n_ref in zip(og_lst, nodes_lst, nodes_ref):
             _, pf = get_flows_open_graph(og)
             assert pf is not None  # has pflow
@@ -137,9 +133,7 @@ class TestOGG:
         n_blocks = [1, 3, 5, 10]
         nodes_ref = [20, 40, 60, 110]
 
-        og_lst, nodes_lst = self.ogg.generate_og(
-            n_blocks, ni_max_vals=[10, 20, 30, 40], rnd=True
-        )
+        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, ni_max_vals=[10, 20, 30, 40], rnd=True)
         for og, n, n_ref in zip(og_lst, nodes_lst, nodes_ref):
             _, pf = get_flows_open_graph(og)
             assert pf is not None  # has pflow
@@ -338,9 +332,7 @@ class TestCompositionFunctions:
                     n_blocks = n_layers
                     n_nodes_merged = 10 + 4 * (n_layers - 4)
                 else:
-                    n_blocks = (
-                        n_layers // 2 * (2 * n_rows - 1) + n_layers % 2 * n_rows
-                    )  # total number of minimal pf og
+                    n_blocks = n_layers // 2 * (2 * n_rows - 1) + n_layers % 2 * n_rows  # total number of minimal pf og
                     n_blocks_external = (
                         2 * n_rows if n_layers % 2 else 2 * n_rows - 1
                     )  # number of minimal pf og with inputs or outputs
