@@ -2,7 +2,7 @@ from graphix.gflow import find_gflow, find_pauliflow
 from graphix.opengraph import OpenGraph
 import networkx as nx
 
-from graphix_og_generator.graphix_og_generator import (
+from graphix_og_generator.og_generator import (
     BlockComposer,
     get_series_composition,
     get_grid_composition,
