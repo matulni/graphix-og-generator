@@ -92,7 +92,7 @@ class BlockComposer:
         og1 = self.og_blocks[0] if not rnd else random.choice(self.og_blocks)
 
         for n, og2 in enumerate(cycle(self.og_blocks), start=1):
-            if n == n_max:
+            if n > n_max:
                 break
             mapping = get_mapping(merged_nodes_max)
             og1, _ = og1.compose(og2, mapping)
