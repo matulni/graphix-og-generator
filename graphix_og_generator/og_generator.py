@@ -84,9 +84,8 @@ class BlockComposer:
                 merged_nodes_max = min_io
 
             # NOTE: In future versions `inputs` and `outputs` of `OpenGraph` will be (unordered) sets which don't support indexing.
-            ins = og2.inputs[:merged_nodes_max] if not rnd else random.choices(og2.inputs, k=merged_nodes_max)
-            outs = og1.outputs[:merged_nodes_max] if not rnd else random.choices(og1.outputs, k=merged_nodes_max)
-
+            ins = og2.inputs[:merged_nodes_max] if not rnd else random.sample(og2.inputs, k=random.randint(0, merged_nodes_max))
+            outs = og1.outputs[:merged_nodes_max] if not rnd else random.sample(og1.outputs, k=random.randint(0, merged_nodes_max))
             return dict(zip(ins, outs))
 
         og1 = self.og_blocks[0] if not rnd else random.choice(self.og_blocks)
@@ -103,7 +102,7 @@ class BlockComposer:
         if ni_max_vals:
             for og, ni_max in zip(og_lst, ni_max_vals):
                 ni_remove = max(0, len(og.inputs) - ni_max)
-                ins = og.inputs[ni_remove:] if not rnd else random.choices(og.inputs, k=ni_remove)
+                ins = og.inputs[ni_remove:] if not rnd else random.sample(og.inputs, k=ni_remove)
                 for i in ins:
                     og.inputs.remove(i)
 
