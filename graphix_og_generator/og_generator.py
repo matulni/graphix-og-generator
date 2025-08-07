@@ -77,8 +77,16 @@ class BlockComposer:
                 merged_nodes_max = min_io
 
             # NOTE: In future versions `inputs` and `outputs` of `OpenGraph` will be (unordered) sets which don't support indexing.
-            ins = og2.inputs[:merged_nodes_max] if not rnd else random.sample(og2.inputs, k=random.randint(0, merged_nodes_max))
-            outs = og1.outputs[:merged_nodes_max] if not rnd else random.sample(og1.outputs, k=random.randint(0, merged_nodes_max))
+            ins = (
+                og2.inputs[:merged_nodes_max]
+                if not rnd
+                else random.sample(og2.inputs, k=random.randint(0, merged_nodes_max))
+            )
+            outs = (
+                og1.outputs[:merged_nodes_max]
+                if not rnd
+                else random.sample(og1.outputs, k=random.randint(0, merged_nodes_max))
+            )
             return dict(zip(ins, outs))
 
         og1 = self.og_blocks[0] if not rnd else random.choice(self.og_blocks)
@@ -97,14 +105,14 @@ class BlockComposer:
 
 def remove_inputs(og: OpenGraph, ni_max: int, rnd: bool = False, seed: int = 42) -> OpenGraph:
     """Return an open graph with `ni_max` inputs at most.
-    
+
     The new open graph is a copy of `og` where `len(og.inputs) - ni_max` nodes have been removed from the input-nodes set.
-    
+
     Parameters
     ----------
-    og: OpenGrap
+    og : OpenGrap
         Open graph whose inputs are removed.
-    ni_max: int
+    ni_max : int
         Maximum number of inputs of the resulting open graph.
     rnd : bool (optional)
         If `True`, the removed inputs are selected randomly. If `False`, the first `len(og.inputs) - ni_max` inputs are removed. It defaults to `False`.

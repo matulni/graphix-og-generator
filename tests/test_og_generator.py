@@ -3,13 +3,13 @@ from graphix.opengraph import OpenGraph
 import networkx as nx
 
 from graphix_og_generator.og_generator import (
-    BlockComposer, remove_inputs,
+    BlockComposer,
+    remove_inputs,
     get_series_composition,
     get_grid_composition,
 )
+from graphix_og_generator.og_blocks import get_og_1, get_og_2
 
-from graphix.fundamentals import Plane
-from graphix.measurements import Measurement
 
 
 def get_flows_open_graph(
@@ -33,68 +33,6 @@ def get_flows_open_graph(
     )
 
     return gf, pf
-
-
-def get_og_1() -> OpenGraph:
-    """Return an open graph with that has Pauli flow but no gflow.
-
-    The returned open graph has the following structure:
-
-    [0]-2-5-(8)
-        | |
-        3-6
-        | |
-    [1]-4-7-(9)
-
-    Adapted from Fig. 7 in D. E. Browne et al 2007 New J. Phys. 9 250.
-    """
-
-    edges = [
-        (0, 2),
-        (1, 4),
-        (2, 3),
-        (3, 4),
-        (2, 5),
-        (3, 6),
-        (4, 7),
-        (5, 6),
-        (6, 7),
-        (5, 8),
-        (7, 9),
-    ]
-
-    graph = nx.Graph(edges)
-
-    inputs = [0, 1]
-    outputs = [8, 9]
-    measurements = {i: Measurement(0, Plane.XY) for i in range(8)}
-
-    og = OpenGraph(graph, measurements, inputs, outputs)
-
-    return og
-
-
-def get_og_2() -> OpenGraph:
-    """Return an open graph with Pauli flow and equal number of outputs and inputs.
-
-    The returned graph has the following structure:
-
-    [0]-2-4-(6)
-        | |
-    [1]-3-5-(7)
-    """
-    graph: nx.Graph[int] = nx.Graph([(0, 2), (1, 3), (2, 3), (2, 4), (3, 5), (4, 5), (4, 6), (5, 7)])
-    inputs = [0, 1]
-    outputs = [6, 7]
-    meas = {
-        0: Measurement(0.1, Plane.XY),  # XY
-        1: Measurement(0.1, Plane.XY),  # XY
-        2: Measurement(0.1, Plane.XY),  # X
-        3: Measurement(0.1, Plane.XY),  # XY
-        4: Measurement(0.0, Plane.XY),  # X
-        5: Measurement(0.5, Plane.XY),  # Y
-    }
-    return OpenGraph(inside=graph, inputs=inputs, outputs=outputs, measurements=meas)
 
 
 class TestOGG:
@@ -133,7 +71,7 @@ class TestOGG:
     def test_random(self) -> None:
         n_blocks = [1, 3, 5, 10]
         nodes_ref = [20, 40, 60, 110]
-        ni_max_vals=[10, 20, 30, 40]
+        ni_max_vals = [10, 20, 30, 40]
 
         og_lst, nodes_lst = self.ogg.generate_og(n_blocks, rnd=True)
         for og, n, n_ref, ni_max in zip(og_lst, nodes_lst, nodes_ref, ni_max_vals):
