@@ -1,7 +1,7 @@
 [project]
 name = "graphix-og-generator"
 authors = [{ name = "Mateo Uldemolins", email = "mateo.uldemolins-nivela@inria.fr" }]
-version = "0.1"
+version = "0.2"
 dependencies = [
   "graphix @ git+https://github.com/TeamGraphix/graphix.git@master"
 ]
