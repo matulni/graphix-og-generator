@@ -23,7 +23,6 @@ class BlockComposer:
         self,
         n_blocks: Iterable[int],
         merged_nodes_max: int = -1,
-        ni_max_vals: Iterable[int] | None = None,
         rnd: bool = False,
         seed: int = 42,
     ) -> tuple[list[OpenGraph], list[int]]:
@@ -35,8 +34,6 @@ class BlockComposer:
             Number of blocks of the constructed open graphs. Must be larger or equal than 1.
         merged_nodes_max: int
             Maximum number of merged nodes at each step. By default (`merged_nodes_max = -1`) all inputs or outputs (whichever is smaller) of the composed open graphs are merged.
-        ni_max_vals : Iterable[int] | None (optional)
-            Maximum number of inputs in the returned open graphs. By default (`ni_max = None`) no maximum is enforced.
         rnd : bool (optional)
             Flag for selecting an stochastic construction of the open graph (see Notes for more details). It defaults to `False`.
         seed : int (optional)
@@ -57,16 +54,12 @@ class BlockComposer:
 
         - The maximum number of nodes merged at each step (`merged_nodes_max`) must be smaller or equal than `min(len(og1.outputs), min(len(og2.inputs))`. If zero, open graphs are composed in parallel.
 
-        - A finite maximum of inputs is achieved by removing `len(og1.inputs) - ni_max` nodes from the input nodes set of the composed open graph at the end of the iteration process. The composed open graph after this operation perserves the flow properties.
-
         - If `rnd == False`:
             - `og2` is selected by cycling over `self.og_blocks`
             - The first `merged_nodes_max` are merged.
-            - The first `delta_noni` inputs are removed.
         - If `random == True`:
             - `og2` is selected randomly from `self.og_blocks`
             - The amount of merged nodes is (uniformly) picked from (0, `merged_nodes_max`). The merged nodes are selected randomly.
-            - The removed `delta_noni` inputs are selected randomly.
         """
 
         n_max = max(n_blocks)
@@ -99,14 +92,42 @@ class BlockComposer:
                 og_lst.append(og1)
                 og_nodes.append(og1.inside.order())
 
-        if ni_max_vals:
-            for og, ni_max in zip(og_lst, ni_max_vals):
-                ni_remove = max(0, len(og.inputs) - ni_max)
-                ins = og.inputs[ni_remove:] if not rnd else random.sample(og.inputs, k=ni_remove)
-                for i in ins:
-                    og.inputs.remove(i)
-
         return og_lst, og_nodes
+
+
+def remove_inputs(og: OpenGraph, ni_max: int, rnd: bool = False, seed: int = 42) -> OpenGraph:
+    """Return an open graph with `ni_max` inputs at most.
+    
+    The new open graph is a copy of `og` where `len(og.inputs) - ni_max` nodes have been removed from the input-nodes set.
+    
+    Parameters
+    ----------
+    og: OpenGrap
+        Open graph whose inputs are removed.
+    ni_max: int
+        Maximum number of inputs of the resulting open graph.
+    rnd : bool (optional)
+        If `True`, the removed inputs are selected randomly. If `False`, the first `len(og.inputs) - ni_max` inputs are removed. It defaults to `False`.
+    seed : int (optional)
+        Seed for the random number generator. It defaults to 42.
+
+    Returns
+    -------
+    OpenGraph
+        The new open graph having `ni_max` inputs at most.
+
+    Notes
+    -----
+    The new open graph perserves the flow properties of the original open graph.
+    """
+
+    og_out = deepcopy(og)
+
+    ni_remove = max(0, len(og.inputs) - ni_max)
+    ins = og.inputs[ni_remove:] if not rnd else random.sample(og.inputs, k=ni_remove)
+    for i in ins:
+        og_out.inputs.remove(i)
+    return og_out
 
 
 #### Deprecated functions

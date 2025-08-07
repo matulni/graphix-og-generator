@@ -3,7 +3,7 @@ from graphix.opengraph import OpenGraph
 import networkx as nx
 
 from graphix_og_generator.og_generator import (
-    BlockComposer,
+    BlockComposer, remove_inputs,
     get_series_composition,
     get_grid_composition,
 )
@@ -15,7 +15,7 @@ from graphix.measurements import Measurement
 def get_flows_open_graph(
     og: OpenGraph,
 ) -> tuple[dict[int, list[int]] | None, dict[int, list[int]] | None]:
-    """Computes the general and Pauli flows of the input open graph"""
+    """Compute the general and Pauli flows of the input open graph"""
 
     graph = og.inside
     iset = set(og.inputs)
@@ -122,8 +122,9 @@ class TestOGG:
         n_blocks = [1, 3, 5]
         nodes_ref = [19, 35, 51]
 
-        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, merged_nodes_max=1, ni_max_vals=[1, 1, 1])
+        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, merged_nodes_max=1)
         for og, n, n_ref in zip(og_lst, nodes_lst, nodes_ref):
+            og = remove_inputs(og, ni_max=1)
             _, pf = get_flows_open_graph(og)
             assert pf is not None  # has pflow
             assert n == n_ref
@@ -132,9 +133,11 @@ class TestOGG:
     def test_random(self) -> None:
         n_blocks = [1, 3, 5, 10]
         nodes_ref = [20, 40, 60, 110]
+        ni_max_vals=[10, 20, 30, 40]
 
-        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, ni_max_vals=[10, 20, 30, 40], rnd=True)
-        for og, n, n_ref in zip(og_lst, nodes_lst, nodes_ref):
+        og_lst, nodes_lst = self.ogg.generate_og(n_blocks, rnd=True)
+        for og, n, n_ref, ni_max in zip(og_lst, nodes_lst, nodes_ref, ni_max_vals):
+            og = remove_inputs(og, ni_max=ni_max)
             _, pf = get_flows_open_graph(og)
             assert pf is not None  # has pflow
             assert n <= n_ref
